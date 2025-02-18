@@ -20,7 +20,7 @@ export const SubscribleToEventRoute: FastifyPluginAsyncZod = async app => {
         },
       },
     },
-    async (request, replay) => {
+    async (request, reply) => {
       const { name, email } = request.body
 
       const { subscriberId } = await subscribleToEvent({
@@ -28,7 +28,7 @@ export const SubscribleToEventRoute: FastifyPluginAsyncZod = async app => {
         email,
       })
 
-      return replay.status(201).send({
+      return reply.status(201).send({
         subscriberId,
       })
     }
