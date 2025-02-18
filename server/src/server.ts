@@ -21,9 +21,13 @@ app.post(
         name: z.string(),
         email: z.string().email(),
       }),
+      response: z.object({
+        name: z.string(),
+        email: z.string().email(),
+      }),
     },
   },
-  (request, replay) => {
+  async (request, replay) => {
     const { name, email } = request.body;
 
     return replay.status(201).send({
