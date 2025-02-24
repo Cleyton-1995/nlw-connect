@@ -4,29 +4,27 @@ import { schema } from '../drizzle/schema'
 import { redis } from '../redis/client'
 
 export async function getRanking() {
-  const ranking = await redis.zrevrange('referral:ranking', 0, 2, 'WITHSCORES')
-  const subscriberIdAndScore: Record<string, number> = {}
+  const topThree = await redis.zrevrange('referral:ranking', 0, 2, 'WITHSCORES')
+  const ranking: Record<string, number> = {}
 
-  for (let i = 0; i < ranking.length; i += 2) {
-    subscriberIdAndScore[ranking[i]] = Number.parseInt(ranking[i + 1])
+  for (let i = 0; i < topThree.length; i += 2) {
+    ranking[topThree[i]] = Number.parseInt(topThree[i + 1])
   }
 
-  const subscribers = await db
+  const subscribersFromRanking = await db
     .select()
     .from(schema.subscriptions)
-    .where(inArray(schema.subscriptions.id, Object.keys(subscriberIdAndScore)))
+    .where(inArray(schema.subscriptions.id, Object.keys(ranking)))
 
-  const rankingWithScore = subscribers
+  const rankingWithScores = subscribersFromRanking
     .map(subscriber => {
       return {
         id: subscriber.id,
         name: subscriber.name,
-        score: subscriberIdAndScore[subscriber.id],
+        score: ranking[subscriber.id],
       }
     })
-    .sort((sub1, sub2) => {
-      return sub1.score - sub2.score
-    })
+    .sort((a, b) => b.score - a.score)
 
-  return { rankingWithScore }
+  return { rankingWithScores }
 }

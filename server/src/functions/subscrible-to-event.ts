@@ -3,24 +3,24 @@ import { db } from '../drizzle/client'
 import { schema } from '../drizzle/schema'
 import { redis } from '../redis/client'
 
-interface SubscribleToEventParams {
+interface SubscribeToEventParams {
   name: string
   email: string
-  referrerId?: string | null
+  invitedBySubscriberId: string | null
 }
 
-export async function subscribleToEvent({
+export async function subscribeToEvent({
   name,
   email,
-  referrerId,
-}: SubscribleToEventParams) {
-  const subscribers = await db
+  invitedBySubscriberId,
+}: SubscribeToEventParams) {
+  const results = await db
     .select()
     .from(schema.subscriptions)
     .where(eq(schema.subscriptions.email, email))
 
-  if (subscribers.length > 0) {
-    return { subscribeId: subscribers[0].id }
+  if (results.length > 0) {
+    return { subscriberId: results[0].id }
   }
 
   const [{ subscriberId }] = await db
@@ -33,11 +33,9 @@ export async function subscribleToEvent({
       subscriberId: schema.subscriptions.id,
     })
 
-  if (referrerId) {
-    await redis.zincrby('referral:ranking', 1, referrerId)
+  if (invitedBySubscriberId) {
+    await redis.zincrby('referral:ranking', 1, invitedBySubscriberId)
   }
 
-  return {
-    subscriberId,
-  }
+  return { subscriberId }
 }
