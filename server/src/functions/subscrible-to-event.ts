@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../drizzle/client'
-import { subscriptions } from '../drizzle/schema/subscriptions'
+import { schema } from '../drizzle/schema'
 import { redis } from '../redis/client'
 
 interface SubscribleToEventParams {
@@ -16,28 +16,28 @@ export async function subscribleToEvent({
 }: SubscribleToEventParams) {
   const subscribers = await db
     .select()
-    .from(subscriptions)
-    .where(eq(subscriptions.email, email))
+    .from(schema.subscriptions)
+    .where(eq(schema.subscriptions.email, email))
 
   if (subscribers.length > 0) {
     return { subscribeId: subscribers[0].id }
   }
 
-  const result = await db
-    .insert(subscriptions)
+  const [{ subscriberId }] = await db
+    .insert(schema.subscriptions)
     .values({
       name,
       email,
     })
-    .returning()
+    .returning({
+      subscriberId: schema.subscriptions.id,
+    })
 
   if (referrerId) {
     await redis.zincrby('referral:ranking', 1, referrerId)
   }
 
-  const subscriber = result[0]
-
   return {
-    subscriberId: subscriber.id,
+    subscriberId,
   }
 }

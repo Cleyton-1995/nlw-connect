@@ -13,5 +13,7 @@ export async function getSubscriberRankingPosition({
     return { position: null }
   }
 
-  return { position: rank + 1 }
+  const position = rank + 1
+
+  return { position }
 }

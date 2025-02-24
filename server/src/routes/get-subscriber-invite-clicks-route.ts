@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
-import { env } from '../env'
 import { getSubscriberInviteClicks } from '../functions/get-subscriber-invite-clicks'
 export const getSubscriberInviteClicksRoute: FastifyPluginAsyncZod =
   async app => {
@@ -10,6 +9,7 @@ export const getSubscriberInviteClicksRoute: FastifyPluginAsyncZod =
       {
         schema: {
           summary: 'Get subscriber invites clicks count',
+          operationId: 'getSubscriberInviteClicks',
           tags: ['referral'],
           params: z.object({
             subscriberId: z.string(),
