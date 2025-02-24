@@ -4,14 +4,14 @@
  * NLW Connect
  * OpenAPI spec version: 0.0.1
  */
-export type PostSubscriptionBody = {
+export type SubscribeToEventBody = {
   name: string;
   email: string;
   /** @nullable */
   referrer?: string | null;
 };
 
-export type PostSubscription201 = {
+export type SubscribeToEvent201 = {
   subscriberId: string;
 };
 
@@ -26,15 +26,15 @@ export const GetInvitesSubscriberId302 = {
   null: 'null',
 } as const;
 
-export type GetSubscriberSubscriberIdRankingClicks200 = {
+export type GetSubscriberInviteClicks200 = {
   count: number;
 };
 
-export type GetSubscriberSubscriberIdRankingCount200 = {
+export type GetSubscriberInviteCount200 = {
   count: number;
 };
 
-export type GetSubscriberSubscriberIdRankingPosition200 = {
+export type GetSubscriberRankingPosition200 = {
   /** @nullable */
   position: number | null;
 };
@@ -54,26 +54,26 @@ export type GetRanking200 = {
 /**
  * @summary Subscribes someone to the event
  */
-export const getPostSubscriptionUrl = () => {
+export const getSubscribeToEventUrl = () => {
 
 
-  return `http://localhost:3333/subscription`
+  return `http://localhost:3333/subscriptions`
 }
 
-export const postSubscription = async (postSubscriptionBody: PostSubscriptionBody, options?: RequestInit): Promise<PostSubscription201> => {
+export const subscribeToEvent = async (subscribeToEventBody: SubscribeToEventBody, options?: RequestInit): Promise<SubscribeToEvent201> => {
   
-  const res = await fetch(getPostSubscriptionUrl(),
+  const res = await fetch(getSubscribeToEventUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      postSubscriptionBody,)
+      subscribeToEventBody,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: PostSubscription201 = body ? JSON.parse(body) : {}
+  const data: SubscribeToEvent201 = body ? JSON.parse(body) : {}
 
   return data
 }
@@ -111,15 +111,15 @@ export const getInvitesSubscriberId = async (subscriberId: string, options?: Req
 /**
  * @summary Get subscriber invites clicks count
  */
-export const getGetSubscriberSubscriberIdRankingClicksUrl = (subscriberId: string,) => {
+export const getGetSubscriberInviteClicksUrl = (subscriberId: string,) => {
 
 
   return `http://localhost:3333/subscriber/${subscriberId}/ranking/clicks`
 }
 
-export const getSubscriberSubscriberIdRankingClicks = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberSubscriberIdRankingClicks200> => {
+export const getSubscriberInviteClicks = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberInviteClicks200> => {
   
-  const res = await fetch(getGetSubscriberSubscriberIdRankingClicksUrl(subscriberId),
+  const res = await fetch(getGetSubscriberInviteClicksUrl(subscriberId),
   {      
     ...options,
     method: 'GET'
@@ -129,7 +129,7 @@ export const getSubscriberSubscriberIdRankingClicks = async (subscriberId: strin
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscriberSubscriberIdRankingClicks200 = body ? JSON.parse(body) : {}
+  const data: GetSubscriberInviteClicks200 = body ? JSON.parse(body) : {}
 
   return data
 }
@@ -139,15 +139,15 @@ export const getSubscriberSubscriberIdRankingClicks = async (subscriberId: strin
 /**
  * @summary Get subscriber invites count
  */
-export const getGetSubscriberSubscriberIdRankingCountUrl = (subscriberId: string,) => {
+export const getGetSubscriberInviteCountUrl = (subscriberId: string,) => {
 
 
   return `http://localhost:3333/subscriber/${subscriberId}/ranking/count`
 }
 
-export const getSubscriberSubscriberIdRankingCount = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberSubscriberIdRankingCount200> => {
+export const getSubscriberInviteCount = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberInviteCount200> => {
   
-  const res = await fetch(getGetSubscriberSubscriberIdRankingCountUrl(subscriberId),
+  const res = await fetch(getGetSubscriberInviteCountUrl(subscriberId),
   {      
     ...options,
     method: 'GET'
@@ -157,7 +157,7 @@ export const getSubscriberSubscriberIdRankingCount = async (subscriberId: string
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscriberSubscriberIdRankingCount200 = body ? JSON.parse(body) : {}
+  const data: GetSubscriberInviteCount200 = body ? JSON.parse(body) : {}
 
   return data
 }
@@ -167,15 +167,15 @@ export const getSubscriberSubscriberIdRankingCount = async (subscriberId: string
 /**
  * @summary Get subscriber ranking position
  */
-export const getGetSubscriberSubscriberIdRankingPositionUrl = (subscriberId: string,) => {
+export const getGetSubscriberRankingPositionUrl = (subscriberId: string,) => {
 
 
   return `http://localhost:3333/subscriber/${subscriberId}/ranking/position`
 }
 
-export const getSubscriberSubscriberIdRankingPosition = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberSubscriberIdRankingPosition200> => {
+export const getSubscriberRankingPosition = async (subscriberId: string, options?: RequestInit): Promise<GetSubscriberRankingPosition200> => {
   
-  const res = await fetch(getGetSubscriberSubscriberIdRankingPositionUrl(subscriberId),
+  const res = await fetch(getGetSubscriberRankingPositionUrl(subscriberId),
   {      
     ...options,
     method: 'GET'
@@ -185,7 +185,7 @@ export const getSubscriberSubscriberIdRankingPosition = async (subscriberId: str
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: GetSubscriberSubscriberIdRankingPosition200 = body ? JSON.parse(body) : {}
+  const data: GetSubscriberRankingPosition200 = body ? JSON.parse(body) : {}
 
   return data
 }
